@@ -6,7 +6,7 @@
 #include "MFCServernew.h"
 #include "MFCServernewDlg.h"
 #include "afxdialogex.h"
-
+#include"afxsock.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -51,7 +51,7 @@ END_MESSAGE_MAP()
 
 CMFCServernewDlg::CMFCServernewDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MFCSERVERNEW_DIALOG, pParent)
-	, m_port(0)
+	, m_port(0), m_socket(this)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -62,6 +62,7 @@ void CMFCServernewDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_PORT, m_port);
 	DDX_Control(pDX, IDC_BUTTON_START, m_start);
 	DDX_Control(pDX, IDC_BUTTON_STOP, m_stop);
+	DDX_Control(pDX, IDC_LIST_BOX, m_listCtrl);
 }
 
 BEGIN_MESSAGE_MAP(CMFCServernewDlg, CDialogEx)
@@ -70,6 +71,7 @@ BEGIN_MESSAGE_MAP(CMFCServernewDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON_START, &CMFCServernewDlg::OnBnClickedButtonStart)
 	ON_BN_CLICKED(IDC_BUTTON_STOP, &CMFCServernewDlg::OnBnClickedButtonStop)
+	ON_BN_CLICKED(IDC_BUTTON_CLEAN, &CMFCServernewDlg::OnBnClickedButtonClean)
 END_MESSAGE_MAP()
 
 
@@ -108,6 +110,7 @@ BOOL CMFCServernewDlg::OnInitDialog()
 	m_port = 8888;// 服务器端口
 	m_stop.EnableWindow(FALSE);//将停止服务器摁键灰化
 	UpdateData(FALSE); //对话框初始化
+	m_listCtrl.SetExtendedStyle(m_listCtrl.GetExtendedStyle() | LVS_EX_FULLROWSELECT);
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -163,31 +166,52 @@ HCURSOR CMFCServernewDlg::OnQueryDragIcon()
 
 
 
-void CMFCServernewDlg::OnBnClickedButtonStart()
+
+// 清空消息列表
+void CMFCServernewDlg::OnBnClickedButtonClean()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	UpdateData(TRUE);//数据恢复
-	BOOL sock = m_socket.Create(m_port,SOCK_STREAM);
-	if (sock) {
-		sock = m_socket.Listen();
-		if (sock) {
-			m_start.EnableWindow(FALSE);//开启服务后变灰
-			m_start.EnableWindow(TRUE);
-			return;
-		}
-		else {
-			AfxMessageBox(_T("套接字监听失败"));
-		}
-
-	}
+	m_listCtrl.DeleteAllItems();
+	//m_serverSocket.SendMsg(_T("aaaa"));
 }
 
+// 启动服务器
+void CMFCServernewDlg::OnBnClickedButtonStart()
+{
+	UpdateData(TRUE);
+	BOOL ret = m_socket.Create(m_port, SOCK_STREAM);
+	if (ret)
+	{
 
+		ret = m_socket.Listen();
+		if (ret)
+		{
+			m_start.EnableWindow(FALSE);
+			m_stop.EnableWindow(TRUE);
+			return;
+		}
+		else
+		{
+			MessageBox(_T("监听套接字监听失败"));
+		}
+	}
+	else
+	{
+		MessageBox(_T("创建监听套接字失败"));
+	}
+	m_start.EnableWindow(TRUE);
+	m_stop.EnableWindow(FALSE);
+}
+
+// 停止服务器
 void CMFCServernewDlg::OnBnClickedButtonStop()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	m_socket.CloseAllConn();
 	m_start.EnableWindow(TRUE);
 	m_stop.EnableWindow(FALSE);
 }
 
+void CMFCServernewDlg::AddMsg(CString msg)
+{
+	m_listCtrl.InsertItem(0, msg);
+}

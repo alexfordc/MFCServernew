@@ -30,6 +30,12 @@
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Serversocket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ConnectSocket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MFCServernew.cpp">
@@ -39,6 +45,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Serversocket.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectSocket.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

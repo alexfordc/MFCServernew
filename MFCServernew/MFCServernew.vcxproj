@@ -179,15 +179,19 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ConnectSocket.h" />
     <ClInclude Include="MFCServernew.h" />
     <ClInclude Include="MFCServernewDlg.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="Serversocket.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ConnectSocket.cpp" />
     <ClCompile Include="MFCServernew.cpp" />
     <ClCompile Include="MFCServernewDlg.cpp" />
+    <ClCompile Include="Serversocket.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
