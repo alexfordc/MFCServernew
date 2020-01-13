@@ -106,8 +106,8 @@ BOOL CMFCServernewDlg::OnInitDialog()
 
 	// TODO: 在此添加额外的初始化代码
 	m_port = 8888;// 服务器端口
-	m_stop.EnableWindow(FALSE);
-	UpdateData(FALSE);
+	m_stop.EnableWindow(FALSE);//将停止服务器摁键灰化
+	UpdateData(FALSE); //对话框初始化
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -166,11 +166,28 @@ HCURSOR CMFCServernewDlg::OnQueryDragIcon()
 void CMFCServernewDlg::OnBnClickedButtonStart()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	UpdateData(TRUE);//数据恢复
+	BOOL sock = m_socket.Create(m_port,SOCK_STREAM);
+	if (sock) {
+		sock = m_socket.Listen();
+		if (sock) {
+			m_start.EnableWindow(FALSE);//开启服务后变灰
+			m_start.EnableWindow(TRUE);
+			return;
+		}
+		else {
+			AfxMessageBox(_T("套接字监听失败"));
+		}
 
+	}
 }
 
 
 void CMFCServernewDlg::OnBnClickedButtonStop()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	m_socket.CloseAllConn();
+	m_start.EnableWindow(TRUE);
+	m_stop.EnableWindow(FALSE);
 }
+

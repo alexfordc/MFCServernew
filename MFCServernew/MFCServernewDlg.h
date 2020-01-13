@@ -3,7 +3,7 @@
 //
 
 #pragma once
-
+#include "afxsock.h"
 
 // CMFCServernewDlg 对话框
 class CMFCServernewDlg : public CDialogEx
@@ -37,4 +37,20 @@ public:
 	int m_port;
 	CButton m_start;
 	CButton m_stop;
+	CServerSocket m_socket;
+};
+
+class CServerSocket : public CSocket
+{
+public:
+	CServerSocket(CMFCServernewDlg* dlg = NULL);
+	virtual ~CServerSocket();
+	// 接受到客户端连接的 回调函数
+	virtual void OnAccept(int nErrorCode);
+	// 关闭所有连接套接字
+	void CloseAllConn();
+private:
+	CMFCServernewDlg* m_dlg;
+	//list<CConnSocket*> m_clientList;
+
 };
