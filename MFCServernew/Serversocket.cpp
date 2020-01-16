@@ -4,7 +4,6 @@
 #include "ServerSocket.h"
 #include"MFCServernew.h"
 
-// CServerSocket
 
 ServerSocket::ServerSocket(CMFCServernewDlg* dlg)
 {
@@ -16,12 +15,10 @@ ServerSocket::~ServerSocket()
 }
 
 
-// CServerSocket 成员函数
 
 // 新的连接请求来了，该函数将被回调
-void ServerSocket::OnAccept(int nErrorCode)
+void ServerSocket::OnAccept(int nErrorCode)//通知侦听套接字，它可以通过调用Accept，接受挂起连接请求
 {
-	// 由框架调用，通知监听套接字现在可以调用Accept成员函数来接收悬挂的（pending）连接请求。
 	ConnectSocket * client = new ConnectSocket(m_dlg);
 	SOCKADDR_IN addr;
 	memset(&addr, 0, sizeof(addr));
@@ -53,5 +50,4 @@ void ServerSocket::CloseAllConn()// 关闭监听套接字
 		delete (*it);
 		it = m_clientList.erase(it);
 	}
-	this->Close();
 }

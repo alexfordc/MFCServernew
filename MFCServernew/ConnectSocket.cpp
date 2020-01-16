@@ -14,8 +14,6 @@ ConnectSocket::~ConnectSocket()
 }
 
 
-// CConnSocket 成员函数
-
 // 当服务器和客户端成功建立好连接，服务器端自动调用此函数
 void ConnectSocket::OnSend(int nErrorCode)
 {
@@ -27,9 +25,9 @@ void ConnectSocket::OnSend(int nErrorCode)
 
 // 当对方发送消息，自动调用此函数
 // 可以在函数内容做接收处理
+// 通知套接字缓冲中有数据，可以调用Receive成员函数取出
 void ConnectSocket::OnReceive(int nErrorCode)
 {
-	// 本函数由框架调用，通知套接字缓冲中有数据，可以调用Receive成员函数取出
 	char recvBuf[512] = { 0 };
 	int recvLen = this->Receive(recvBuf, sizeof(recvBuf));//取出数据
 	CString msg;
@@ -42,7 +40,7 @@ void ConnectSocket::OnReceive(int nErrorCode)
 	this->Send(recvBuf, strlen(recvBuf));
 }
 
-// 对方主动断开连接，自动调用此函数
+// 对方主动断开连接，自动调用此函数，通知套接字，关闭对它的套接字连接
 void ConnectSocket::OnClose(int nErrorCode)
 {
 	CString msg;

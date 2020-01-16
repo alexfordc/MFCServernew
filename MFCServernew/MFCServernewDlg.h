@@ -43,4 +43,6 @@ public:
 	void AddMsg(CString msg);
 	afx_msg void OnBnClickedButtonClean();
 	CListCtrl m_listCtrl;
+	afx_msg void OnBnClickedButtonSend();
+	CString m_sendbuf;
 };

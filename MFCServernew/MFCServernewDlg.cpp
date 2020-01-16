@@ -52,6 +52,7 @@ END_MESSAGE_MAP()
 CMFCServernewDlg::CMFCServernewDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MFCSERVERNEW_DIALOG, pParent)
 	, m_port(0), m_socket(this)
+	, m_sendbuf(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -63,6 +64,7 @@ void CMFCServernewDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_START, m_start);
 	DDX_Control(pDX, IDC_BUTTON_STOP, m_stop);
 	DDX_Control(pDX, IDC_LIST_BOX, m_listCtrl);
+	DDX_Text(pDX, IDC_EDIT_SEND, m_sendbuf);
 }
 
 BEGIN_MESSAGE_MAP(CMFCServernewDlg, CDialogEx)
@@ -72,6 +74,7 @@ BEGIN_MESSAGE_MAP(CMFCServernewDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_START, &CMFCServernewDlg::OnBnClickedButtonStart)
 	ON_BN_CLICKED(IDC_BUTTON_STOP, &CMFCServernewDlg::OnBnClickedButtonStop)
 	ON_BN_CLICKED(IDC_BUTTON_CLEAN, &CMFCServernewDlg::OnBnClickedButtonClean)
+	ON_BN_CLICKED(IDC_BUTTON_SEND, &CMFCServernewDlg::OnBnClickedButtonSend)
 END_MESSAGE_MAP()
 
 
@@ -107,7 +110,7 @@ BOOL CMFCServernewDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
-	m_port = 8888;// 服务器端口
+	m_port = 8080;// 服务器端口
 	m_stop.EnableWindow(FALSE);//将停止服务器摁键灰化
 	UpdateData(FALSE); //对话框初始化
 	m_listCtrl.SetExtendedStyle(m_listCtrl.GetExtendedStyle() | LVS_EX_FULLROWSELECT);
@@ -172,7 +175,6 @@ void CMFCServernewDlg::OnBnClickedButtonClean()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	m_listCtrl.DeleteAllItems();
-	//m_serverSocket.SendMsg(_T("aaaa"));
 }
 
 // 启动服务器
@@ -214,4 +216,15 @@ void CMFCServernewDlg::OnBnClickedButtonStop()
 void CMFCServernewDlg::AddMsg(CString msg)
 {
 	m_listCtrl.InsertItem(0, msg);
+}
+
+
+void CMFCServernewDlg::OnBnClickedButtonSend()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	UpdateData(TRUE);
+	USES_CONVERSION;
+	//函数T2A和W2A均支持ATL和MFC中的字符
+	char * send = T2A(m_sendbuf);
+	m_socket.Send(send, strlen(send));
 }
